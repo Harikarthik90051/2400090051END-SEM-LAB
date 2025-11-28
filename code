@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Portal - React Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:"Poppins",sans-serif;
+      background:linear-gradient(135deg,#0f172a,#020617);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#e5e7eb;
+    }
+    #root{width:100%;max-width:1000px;height:90vh}
+
+    .card-shell{
+      background:radial-gradient(circle at top,#1d4ed8,#020617);
+      border-radius:24px;
+      box-shadow:0 25px 40px rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.5);
+      padding:18px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* LOGIN LAYOUT */
+    .login-layout{
+      flex:1;
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:20px;
+    }
+    .login-left{
+      padding:10px 12px;
+      border-radius:18px;
+      background:rgba(15,23,42,.9);
+      box-shadow:0 18px 30px rgba(15,23,42,1);
+      border:1px solid rgba(96,165,250,.6);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+    }
+    .badge-dot{
+      width:8px;height:8px;border-radius:999px;
+      background:radial-gradient(circle,#22c55e,#15803d);
+      box-shadow:0 0 10px rgba(34,197,94,.9);
+    }
+    .title{
+      margin-top:10px;
+      font-size:24px;
+      font-weight:600;
+    }
+    .title span{
+      background:linear-gradient(120deg,#38bdf8,#a855f7,#f97316);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .subtitle{margin-top:6px;font-size:13px;color:#cbd5f5}
+    .stat-row{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      font-size:11px;
+    }
+    .stat{
+      flex:1;
+      border-radius:14px;
+      padding:8px 10px;
+      background:radial-gradient(circle at top left,rgba(56,189,248,.3),rgba(15,23,42,1));
+      border:1px solid rgba(148,163,184,.7);
+      box-shadow:0 14px 22px rgba(15,23,42,.9);
+    }
+    .stat strong{display:block;font-size:18px}
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:10px;
+      font-size:10px;
+    }
+    .chip-pill{
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.7);
+    }
+    .small-grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      font-size:10px;
+    }
+    .mini{
+      padding:8px;
+      border-radius:12px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.7);
+    }
+    .mini-label{font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.08em}
+    .mini-value{font-size:14px;font-weight:500}
+
+    .login-right{
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.7);
+      box-shadow:0 18px 30px rgba(15,23,42,.95);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:10px;
+    }
+    .login-right h2{font-size:18px;margin-bottom:2px}
+    .login-right p{font-size:12px;color:#9ca3af}
+
+    .field-group{margin-top:6px;font-size:12px;display:flex;flex-direction:column;gap:4px}
+    label{font-size:11px}
+    .input,.select{
+      margin-top:2px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.95);
+      color:#e5e7eb;
+      font-size:12px;
+      outline:none;
+      transition:.2s border, .2s box-shadow;
+    }
+    .input:focus,.select:focus{
+      border-color:#38bdf8;
+      box-shadow:0 0 0 1px rgba(56,189,248,.6);
+    }
+    .hint{font-size:10px;color:#9ca3af}
+    .row-between{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:6px;
+      font-size:11px;
+      color:#9ca3af;
+    }
+    .small-link{color:#38bdf8;cursor:pointer}
+    .btn{
+      margin-top:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:none;
+      width:100%;
+      font-size:13px;
+      font-weight:500;
+      cursor:pointer;
+      background:linear-gradient(135deg,#38bdf8,#6366f1);
+      color:#0b1120;
+      box-shadow:0 16px 30px rgba(37,99,235,.9);
+      transition:.15s transform,.15s box-shadow,.15s filter;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 22px 36px rgba(37,99,235,1);
+    }
+    .btn:active{
+      transform:translateY(1px);
+      box-shadow:0 12px 22px rgba(15,23,42,1);
+    }
+    .error{margin-top:4px;font-size:11px;color:#fecaca}
+
+    /* DASHBOARD */
+    .dash-layout{
+      flex:1;
+      display:grid;
+      grid-template-columns:230px minmax(0,1fr);
+      gap:14px;
+    }
+    .sidebar{
+      border-radius:18px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(59,130,246,.8);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      box-shadow:0 18px 30px rgba(15,23,42,1);
+    }
+    .logo-row{display:flex;align-items:center;gap:8px}
+    .logo-icon{
+      width:28px;height:28px;border-radius:12px;
+      background:conic-gradient(from 150deg,#38bdf8,#a855f7,#f97316,#22c55e,#38bdf8);
+      display:flex;align-items:center;justify-content:center;
+      color:#020617;font-weight:600;
+      box-shadow:0 12px 20px rgba(15,23,42,1);
+    }
+    .logo-text{font-size:15px;font-weight:500}
+    .logo-sub{font-size:10px;color:#9ca3af}
+    .menu-title{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:#64748b;
+      margin-top:6px;
+    }
+    .menu{
+      display:flex;
+      flex-direction:column;
+      margin-top:4px;
+      gap:4px;
+      font-size:12px;
+    }
+    .menu-item{
+      padding:6px 10px;
+      border-radius:999px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+      border:1px solid transparent;
+      transition:.15s background,.15s box-shadow,.15s border,.15s transform;
+    }
+    .menu-item span{display:flex;align-items:center;gap:6px}
+    .menu-item-icon{font-size:14px}
+    .menu-item:hover{
+      background:radial-gradient(circle at left,rgba(56,189,248,.4),rgba(15,23,42,1));
+      border-color:rgba(59,130,246,.9);
+      transform:translateY(-1px);
+      box-shadow:0 10px 20px rgba(15,23,42,1);
+    }
+    .menu-item.active{
+      background:radial-gradient(circle at left,rgba(56,189,248,.5),rgba(15,23,42,1));
+      border-color:rgba(129,140,248,1);
+      box-shadow:0 14px 24px rgba(15,23,42,1);
+    }
+    .tag{
+      font-size:9px;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.9);
+    }
+    .side-footer{
+      margin-top:auto;
+      font-size:11px;
+      padding:8px;
+      border-radius:12px;
+      background:radial-gradient(circle at top,rgba(129,140,248,.4),rgba(15,23,42,1));
+      border:1px solid rgba(148,163,184,.7);
+    }
+
+    .dash-main{
+      border-radius:18px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.7);
+      padding:12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      box-shadow:0 20px 32px rgba(15,23,42,1);
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .top-info{font-size:12px}
+    .top-name{
+      font-size:16px;
+      font-weight:500;
+      background:linear-gradient(120deg,#e5e7eb,#bfdbfe);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .top-sub{font-size:11px;color:#9ca3af}
+    .logout{margin-left:6px;color:#fca5a5;cursor:pointer;text-decoration:underline;font-size:11px}
+    .top-actions{
+      display:flex;align-items:center;gap:8px;font-size:11px;
+    }
+    .search{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      padding:4px 8px;
+      background:rgba(15,23,42,.9);
+    }
+    .search input{
+      border:none;
+      background:transparent;
+      outline:none;
+      color:#e5e7eb;
+      font-size:11px;
+      width:130px;
+    }
+    .role-chip{
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.95);
+    }
+    .avatar{
+      width:30px;height:30px;border-radius:999px;
+      background:radial-gradient(circle at top,#38bdf8,#4f46e5);
+      display:flex;align-items:center;justify-content:center;
+      color:#020617;font-weight:600;
+      box-shadow:0 10px 20px rgba(37,99,235,1);
+    }
+
+    .stat-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+      font-size:11px;
+    }
+    .stat-card2{
+      border-radius:14px;
+      padding:8px 9px;
+      background:radial-gradient(circle at top left,rgba(59,130,246,.4),rgba(15,23,42,1));
+      border:1px solid rgba(129,140,248,.9);
+      box-shadow:0 16px 28px rgba(15,23,42,1);
+    }
+    .s-label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#e0f2fe}
+    .s-value{font-size:16px;font-weight:600}
+    .s-sub{font-size:10px;color:#cbd5f5}
+
+    .bottom-grid{
+      display:grid;
+      grid-template-columns:1.4fr 1fr;
+      gap:8px;
+      flex:1;
+      min-height:0;
+      font-size:11px;
+    }
+    .card{
+      border-radius:14px;
+      padding:10px;
+      background:rgba(15,23,42,1);
+      border:1px solid rgba(148,163,184,.8);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      box-shadow:0 16px 30px rgba(15,23,42,1);
+      min-height:0;
+    }
+    .card-head{display:flex;justify-content:space-between;align-items:center}
+    .card-title{font-size:13px;font-weight:500}
+    .card-sub{font-size:10px;color:#9ca3af}
+    .card-tags{display:flex;gap:6px;font-size:10px}
+    .tag-pill{
+      padding:2px 7px;border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.95);
+    }
+    .list{
+      display:flex;flex-direction:column;gap:6px;overflow-y:auto;
+    }
+    .list-item{
+      padding:6px 7px;
+      border-radius:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      background:radial-gradient(circle at left,rgba(30,64,175,.8),rgba(15,23,42,1));
+      border:1px solid rgba(129,140,248,.9);
+    }
+    .li-main{display:flex;flex-direction:column;gap:2px}
+    .li-title{font-size:12px;font-weight:500}
+    .li-meta{display:flex;flex-wrap:wrap;gap:4px;font-size:10px}
+    .soft{
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.9);
+    }
+    .li-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:10px}
+    .status{
+      padding:2px 7px;border-radius:999px;
+      border:1px solid rgba(148,163,184,.9);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .green{background:rgba(6,95,70,.9);border-color:rgba(45,212,191,1);color:#bbf7d0}
+    .orange{background:rgba(113,63,18,.95);border-color:rgba(251,191,36,1);color:#fef9c3}
+    .red{background:rgba(127,29,29,.95);border-color:rgba(248,113,113,1);color:#fee2e2}
+
+    @media(max-width:900px){
+      #root{height:auto}
+      .card-shell{height:auto}
+      .login-layout,.dash-layout{grid-template-columns:1fr}
+      .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .bottom-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React + ReactDOM + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const {useState} = React;
+
+    function Login({onLogin}){
+      const [name,setName] = useState("");
+      const [email,setEmail] = useState("");
+      const [password,setPassword] = useState("");
+      const [role,setRole] = useState("student");
+      const [error,setError] = useState("");
+
+      function handleSubmit(e){
+        e.preventDefault();
+        if(!name.trim() || !email.trim() || !password.trim()){
+          setError("⚠ Please fill all fields.");
+          return;
+        }
+        setError("");
+        onLogin({name,email,role});
+      }
+
+      return (
+        <div className="card-shell">
+          <div className="login-layout">
+            <section className="login-left">
+              <div>
+                <div className="badge">
+                  <span className="badge-dot"></span>
+                  React • Student Portal
+                </div>
+                <h1 className="title">
+                  Welcome to <span>Campus Desk</span>
+                </h1>
+                <p className="subtitle">
+                  One place to view your classes, attendance, GPA and fee status.
+                </p>
+                <div className="stat-row">
+                  <div className="stat">
+                    <span>Today&apos;s Classes</span>
+                    <strong>3</strong>
+                    <span style={{fontSize:"10px"}}>2 theory • 1 lab</span>
+                  </div>
+                  <div className="stat">
+                    <span>Overall Attendance</span>
+                    <strong>91%</strong>
+                    <span style={{fontSize:"10px"}}>Safe above 75%</span>
+                  </div>
+                </div>
+                <div className="chips">
+                  <span className="chip-pill">⚡ Fast overview</span>
+                  <span className="chip-pill">📊 GPA tracker</span>
+                  <span className="chip-pill">💳 Fee reminders</span>
+                </div>
+              </div>
+              <div className="small-grid">
+                <div className="mini">
+                  <div className="mini-label">CGPA</div>
+                  <div className="mini-value">8.6</div>
+                  <div className="hint">Target 9.0</div>
+                </div>
+                <div className="mini">
+                  <div className="mini-label">Credits</div>
+                  <div className="mini-value">22 / 24</div>
+                  <div className="hint">Current semester</div>
+                </div>
+                <div className="mini">
+                  <div className="mini-label">Backlogs</div>
+                  <div className="mini-value">0</div>
+                  <div className="hint">Great going 🎯</div>
+                </div>
+              </div>
+            </section>
+
+            <form className="login-right" onSubmit={handleSubmit}>
+              <div>
+                <h2>Sign in</h2>
+                <p>Use any demo details to open the dashboard.</p>
+              </div>
+
+              <div className="field-group">
+                <label>Full Name</label>
+                <input
+                  className="input"
+                  placeholder="e.g. Karthik Reddy"
+                  value={name}
+                  onChange={e=>setName(e.target.value)}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>College Email</label>
+                <input
+                  className="input"
+                  type="email"
+                  placeholder="name@college.edu"
+                  value={email}
+                  onChange={e=>setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="field-group">
+                <label>Password</label>
+                <input
+                  className="input"
+                  type="password"
+                  placeholder="demo: 1234"
+                  value={password}
+                  onChange={e=>setPassword(e.target.value)}
+                />
+                <span className="hint">For lab exam you can mention: validation only checks non-empty.</span>
+              </div>
+
+              <div className="field-group">
+                <label>Role</label>
+                <select className="select" value={role} onChange={e=>setRole(e.target.value)}>
+                  <option value="student">Student</option>
+                  <option value="mentor">Mentor</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div className="row-between">
+                <label><input type="checkbox" /> Remember me</label>
+                <span className="small-link">Forgot password?</span>
+              </div>
+
+              {error && <div className="error">{error}</div>}
+
+              <button className="btn" type="submit">Open Dashboard</button>
+
+              <div className="row-between">
+                <span className="hint">New user? Ask admin to create ID.</span>
+                <span className="small-link">Need help?</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function Dashboard({user,onLogout}){
+      const first = user.name ? user.name.trim()[0].toUpperCase() : "S";
+      return (
+        <div className="card-shell">
+          <div className="dash-layout">
+            <aside className="sidebar">
+              <div>
+                <div className="logo-row">
+                  <div className="logo-icon">C</div>
+                  <div>
+                    <div className="logo-text">Campus Desk</div>
+                    <div className="logo-sub">Student Portal</div>
+                  </div>
+                </div>
+                <div className="menu-title">Main</div>
+                <nav className="menu">
+                  <div className="menu-item active">
+                    <span><span className="menu-item-icon">🏠</span>Overview</span>
+                    <span className="tag">Live</span>
+                  </div>
+                  <div className="menu-item">
+                    <span><span className="menu-item-icon">📚</span>Courses</span>
+                  </div>
+                  <div className="menu-item">
+                    <span><span className="menu-item-icon">📝</span>Attendance</span>
+                  </div>
+                  <div className="menu-item">
+                    <span><span className="menu-item-icon">📊</span>Results</span>
+                  </div>
+                </nav>
+
+                <div className="menu-title">Extras</div>
+                <nav className="menu">
+                  <div className="menu-item">
+                    <span><span className="menu-item-icon">📅</span>Calendar</span>
+                  </div>
+                  <div className="menu-item">
+                    <span><span className="menu-item-icon">⚙️</span>Settings</span>
+                  </div>
+                </nav>
+              </div>
+
+              <div className="side-footer">
+                Check attendance every week to avoid shortage.  
+                <span className="hint">Maintain above 75% in all subjects.</span>
+              </div>
+            </aside>
+
+            <main className="dash-main">
+              <header className="topbar">
+                <div className="top-info">
+                  <div>Welcome back,</div>
+                  <div className="top-name">{user.name || "Student"}</div>
+                  <div className="top-sub">
+                    {user.role==="admin"
+                      ? "Admin view • Manage students and reports."
+                      : user.role==="mentor"
+                      ? "Mentor view • Track your mentees quickly."
+                      : "Student view • Your semester snapshot."}
+                    <span className="logout" onClick={onLogout}>Logout</span>
+                  </div>
+                </div>
+                <div className="top-actions">
+                  <div className="search">
+                    <span>🔍</span>
+                    <input placeholder="Search subjects or faculty..." />
+                  </div>
+                  <div className="role-chip">
+                    {user.role==="admin"?"Admin":
+                     user.role==="mentor"?"Mentor":"Student"}
+                  </div>
+                  <div className="avatar">{first}</div>
+                </div>
+              </header>
+
+              <section className="stat-grid">
+                <div className="stat-card2">
+                  <div className="s-label">CGPA</div>
+                  <div className="s-value">8.6</div>
+                  <div className="s-sub">+0.2 vs last sem</div>
+                </div>
+                <div className="stat-card2">
+                  <div className="s-label">Attendance</div>
+                  <div className="s-value">91%</div>
+                  <div className="s-sub">All subjects &gt; 80%</div>
+                </div>
+                <div className="stat-card2">
+                  <div className="s-label">Credits</div>
+                  <div className="s-value">22/24</div>
+                  <div className="s-sub">On track</div>
+                </div>
+                <div className="stat-card2">
+                  <div className="s-label">Fees Due</div>
+                  <div className="s-value">₹ 4,500</div>
+                  <div className="s-sub">Pay before 30 Nov</div>
+                </div>
+              </section>
+
+              <section className="bottom-grid">
+                <div className="card">
+                  <div className="card-head">
+                    <div>
+                      <div className="card-title">Today&apos;s Classes</div>
+                      <div className="card-sub">Keep track of timings and rooms.</div>
+                    </div>
+                    <div className="card-tags">
+                      <span className="tag-pill">3 sessions</span>
+                      <span className="tag-pill">IST</span>
+                    </div>
+                  </div>
+                  <div className="list">
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">Data Structures</div>
+                        <div className="li-meta">
+                          <span className="soft">9:00 - 10:30</span>
+                          <span className="soft">Room C-203</span>
+                          <span className="soft">Prof. Meera</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status green">Ongoing</div>
+                        <div className="soft">Attendance: 94%</div>
+                      </div>
+                    </div>
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">Operating Systems Lab</div>
+                        <div className="li-meta">
+                          <span className="soft">11:00 - 12:30</span>
+                          <span className="soft">Lab L-102</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status orange">Next</div>
+                        <div className="soft">Bring record</div>
+                      </div>
+                    </div>
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">DBMS</div>
+                        <div className="li-meta">
+                          <span className="soft">2:00 - 3:30</span>
+                          <span className="soft">Room B-108</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status">Upcoming</div>
+                        <div className="soft">Project discussion</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-head">
+                    <div>
+                      <div className="card-title">Announcements</div>
+                      <div className="card-sub">Important updates from college.</div>
+                    </div>
+                    <div className="card-tags">
+                      <span className="tag-pill">Today</span>
+                    </div>
+                  </div>
+                  <div className="list">
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">Mid-Sem Exams</div>
+                        <div className="li-meta">
+                          <span className="soft">Starts 10 Dec</span>
+                          <span className="soft">Time table released</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status orange">Important</div>
+                      </div>
+                    </div>
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">Hackathon</div>
+                        <div className="li-meta">
+                          <span className="soft">CSE Dept • 24 hrs</span>
+                          <span className="soft">Team size 3–5</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status green">Open</div>
+                      </div>
+                    </div>
+                    <div className="list-item">
+                      <div className="li-main">
+                        <div className="li-title">Fee Reminder</div>
+                        <div className="li-meta">
+                          <span className="soft">Last date: 30 Nov</span>
+                          <span className="soft">Online only</span>
+                        </div>
+                      </div>
+                      <div className="li-right">
+                        <div className="status red">Urgent</div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="hint">You can mention in viva: “Announcements data is static for demo”.</span>
+                </div>
+              </section>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    function App(){
+      const [user,setUser] = useState(null);
+      return user
+        ? <Dashboard user={user} onLogout={()=>setUser(null)} />
+        : <Login onLogin={setUser} />;
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
